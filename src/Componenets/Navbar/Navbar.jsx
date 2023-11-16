@@ -11,9 +11,10 @@ const Navbar = () => {
             {/* Logo and Title */}
             <div className="text-xl font-extrabold text-gray-900 dark:text-white font-roboto">
                 {/* Title with Color Transition */}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r to-red-600 from-blue-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-black">
                     Furry Tails
                 </span>
+
             </div>
 
             {/* Navigation Links */}
