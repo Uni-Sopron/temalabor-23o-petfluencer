@@ -3,6 +3,7 @@ import LeftSide from '../LeftSidebar/LeftSide'
 import RightSide from "../RightSidebar/RightSide";
 import Navbar from '../Navbar/Navbar'
 import CardSectien from '../Main/CardSectien';
+import Main from '../Main/Main';
 
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
         </div>
         <div className="flex-auto w-[60%] absolute left-[20%] top-14 bg-gray-100 rounded-x]">
            <CardSectien></CardSectien>
+           <Main></Main>
         </div>
         <div className="flex-auto w-[20%] fixed right-0 top-12">
           <RightSide></RightSide>

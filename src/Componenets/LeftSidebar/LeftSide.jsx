@@ -163,13 +163,13 @@ const LeftSide = () => {
         <div className="flex items-center">
           <img className="h-10 mb-3 mr-2" src={facebook} alt="facebook"></img>
           <p className="font-roboto font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-black no-underline tracking-normal leading-none py-2">
-            Social Network
+            Facebook
           </p>
         </div>
         <div className="flex items-center">
           <img className="h-10 mb-3 mr-2" src={twitter} alt="twitteer"></img>
           <p className="font-roboto font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-black no-underline tracking-normal leading-none py-2">
-            Social Network
+            Twitter
           </p>
         </div>
       </div>
