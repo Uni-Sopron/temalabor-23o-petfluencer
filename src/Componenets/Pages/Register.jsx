@@ -8,21 +8,26 @@ import {
     Input,
     Button,
 } from "@material-tailwind/react";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import PacmanLoader from "react-spinners/PacmanLoader";
 
-
-const Login = () => {
-    const [loading, setLoading] = useState(false);
+const Register = () => {
+    const [loading, setLoading]  = useState(false);
 
     let initialValues = {
-        email: '',
-        password: '',
+        name: "",
+        email: "",
+        password: "",
     }
 
+
     const validationSchema = Yup.object({
+        name: Yup.string()
+            .required("Required")
+            .min("4", "Must be at least 4 characters long")
+            .matches(/^[a-zA-Z]+$/, "Name can only contain letters"),
         email: Yup.string().email("Invalid email address").required("Required"),
         password: Yup.string()
             .required("Required")
@@ -30,21 +35,18 @@ const Login = () => {
             .matches(/^[a-zA-Z]+$/, "Password can only contain letters"),
     });
 
-    const handleSubmit = (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        const { email, password } = formik.values;
+        const { name, email, password } = formik.values;
         if (formik.isValid === true) {
-            alert("Login Successfull");
+            alert("Register Successfull");
         } else {
-            alert("Login Failed");
+            alert("Check your input fields");
         }
-        console.log("formik", formik);
-    }
-
-    const formik = useFormik({ initialValues, validationSchema, handleSubmit });
+    };
 
 
-
+    const formik = useFormik({ initialValues, validationSchema, handleRegister });
 
     return (
         <>
@@ -53,7 +55,7 @@ const Login = () => {
                     <PacmanLoader color="#5A5A5A" size={12} speedMultiplier={0.7} />
                 </div>
             ) : (
-                <div className="grid  grid-cols-1 h-screen justify-items-center items-center">
+                <div className="grid grid-cols-1 justify-items-center items-center h-screen">
                     <Card className="w-96">
                         <CardHeader
                             variant="gradient"
@@ -61,17 +63,33 @@ const Login = () => {
                             className="mb-4 grid h-28 place-items-center"
                         >
                             <Typography variant="h3" color="white">
-                                Sign In
+                                Sign up
                             </Typography>
                         </CardHeader>
                         <CardBody className="flex flex-col gap-4">
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-2">
+                            <form onSubmit="">
+                                <div className='mb-2'>
                                     <Input
-                                        name='email'
-                                        type='email'
+                                        name="name"
+                                        type="text"
+                                        label="Name"
+                                        sizes="lg"
+                                        {...formik.getFieldProps("name")}
+                                    />
+                                </div>
+                                <div>
+                                    {formik.touched.name && formik.errors.name && (
+                                        <Typography variant="small" color="red">
+                                            {formik.errors.name}
+                                        </Typography>
+                                    )}
+                                </div>
+                                <div className='mt-4 mb-2'>
+                                    <Input
+                                        name="email"
+                                        type="email"
                                         label="Email"
-                                        size="1g"
+                                        size="lg"
                                         {...formik.getFieldProps("email")}
                                     />
                                 </div>
@@ -82,14 +100,15 @@ const Login = () => {
                                         </Typography>
                                     )}
                                 </div>
-                                <div className="mt -4 mb-2">
+                                <div className='mt-4 mb-2'>
                                     <Input
-                                        name='password'
-                                        type='password'
+                                        name="password"
+                                        type="password"
                                         label="Password"
-                                        size="1g"
+                                        size="lg"
                                         {...formik.getFieldProps("password")}
                                     />
+
                                 </div>
                                 <div>
                                     {formik.touched.password && formik.errors.password && (
@@ -98,34 +117,26 @@ const Login = () => {
                                         </Typography>
                                     )}
                                 </div>
-                                <Button variant="gradient" fullWidth className='mb-4' type='submit '>
-                                    Sign In
+                                <Button variant="gradient" fullWidth type='submit' className='mb-4'>
+                                    Sign up
                                 </Button>
                             </form>
                         </CardBody>
                         <CardFooter className="pt-0">
-                            <Button variant="gradient" fullWidth className='mb-4'>
-                                Sign In with Google
-                            </Button>
-                            <Link to="/reset ">
-                                <p className="ml-1 font-bold font-roboto text-sm  text-blue-500 text-center">
-                                    Reset Password
-                                </p>
-                            </Link>
-                            <div className="mt-6 flex items-center font-roboto text-base justify-center">
-                                Don't have any account?
-                                <Link to="/register">
-                                    <p className="ml-1 font-bold font-roboto text-sm  text-blue-500 text-center">
-                                        Register Now
+                            <div className="mt-6 flex font-roboto text-base justify-center">
+                                Have an account?
+                                <Link to="/login">
+                                    <p className="ml-1 font-bold font-roboto text-base text-blue-500 text-center">
+                                        Sign in
                                     </p>
                                 </Link>
                             </div>
                         </CardFooter>
                     </Card>
-                </div > 
+                </div>
             )}
         </>
     )
 }
 
-export default Login
+export default Register
