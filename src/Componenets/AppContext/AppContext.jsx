@@ -49,7 +49,7 @@ const AppContext = ({ children }) => {
         }
     };
 
-    const loginWithUserAndEmail = async (email, password) => {
+    const loginWithEmailAndPassword = async (email, password) => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
         } catch (err) {
@@ -93,18 +93,9 @@ const AppContext = ({ children }) => {
         }
     };
 
-    const initialState = {
-        signInWithGoogle: signInWithGoogle,
-        loginWithUserAndEmail: loginWithUserAndEmail,
-        registerWithEmailAndPassword: registerWithEmailAndPassword,
-        sendPasswordToUser: sendPasswordToUser,
-        signOutUser: signOutUser,
-        user: user,
-        userData: userData,
-    };
 
     const userStateChanged = async () => {
-        onAuthStateChanged(auth, async () => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const q = query(collectionUsersRef, where("uid", "==", user.uid));
                 await onSnapshot(q, (doc) => {
@@ -127,6 +118,22 @@ const AppContext = ({ children }) => {
         }
         return () => userStateChanged();
     }, []);
+
+
+    const initialState = {
+        signInWithGoogle: signInWithGoogle,
+        loginWithEmailAndPassword: loginWithEmailAndPassword,
+        registerWithEmailAndPassword: registerWithEmailAndPassword,
+        sendPasswordToUser: sendPasswordToUser,
+        signOutUser: signOutUser,
+        user: user,
+        userData: userData,
+    };
+
+    console.log("user", user);
+    console.log("userdata", userData);
+
+
 
     return (
         <div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
     Card,
     CardHeader,
@@ -8,23 +8,43 @@ import {
     Input,
     Button,
 } from "@material-tailwind/react";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { AuthContext } from '../AppContext/AppContext';
+import { auth, onAuthStateChanged } from '../Firebase/firebase';
 
 
 const Login = () => {
 
-    const { signInWithGoogle } = React.useContext(AuthContext);
-
+    const { signInWithGoogle, loginWithEmailAndPassword } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        setLoading(true);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate("/");
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        });
+    }, [navigate]);
+
+
+
 
     let initialValues = {
         email: '',
         password: '',
-    }
+    };
+
+
+
 
     const validationSchema = Yup.object({
         email: Yup.string().email("Invalid email address").required("Required"),
@@ -38,9 +58,11 @@ const Login = () => {
         e.preventDefault();
         const { email, password } = formik.values;
         if (formik.isValid === true) {
-            alert("Login Successfull");
+            loginWithEmailAndPassword(email, password);
+            setLoading(true);
         } else {
-            alert("Login Failed");
+            setLoading(false);
+            alert("Invalid email or password");
         }
         console.log("formik", formik);
     }
@@ -75,7 +97,7 @@ const Login = () => {
                                         name='email'
                                         type='email'
                                         label="Email"
-                                        size="1g"
+                                        size="lg"
                                         {...formik.getFieldProps("email")}
                                     />
                                 </div>
@@ -91,7 +113,7 @@ const Login = () => {
                                         name='password'
                                         type='password'
                                         label="Password"
-                                        size="1g"
+                                        size="lg"
                                         {...formik.getFieldProps("password")}
                                     />
                                 </div>
@@ -126,7 +148,7 @@ const Login = () => {
                             </div>
                         </CardFooter>
                     </Card>
-                </div > 
+                </div >
             )}
         </>
     )

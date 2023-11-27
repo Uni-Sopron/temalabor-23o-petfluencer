@@ -1,11 +1,15 @@
 // Import React and required components from the Material Tailwind library
-import React from 'react';
+import React, { useContext } from 'react';
 import { Tooltip } from '@material-tailwind/react';
 import { Avatar } from '@material-tailwind/react';
 import avatar from '../../assets/avatar.png';
+import { AuthContext } from '../AppContext/AppContext';
 
 // UserLinks component
 const UserLinks = () => {
+
+    const { signOutUser } = useContext(AuthContext);
+
     return (
         // Container div for the entire user links section
         <div className="flex justify-center items-center cursor-pointer">
@@ -73,7 +77,7 @@ const UserLinks = () => {
             </div>
 
             {/* Avatar and User Info Section */}
-            <div className="mx-4 flex items-center">
+            <div className="mx-4 flex items-center" onClick={signOutUser}>
                 {/* Tooltip for the Avatar */}
                 <Tooltip content="Sign Out" placement="bottom">
                     {/* Avatar component with a tooltip */}
