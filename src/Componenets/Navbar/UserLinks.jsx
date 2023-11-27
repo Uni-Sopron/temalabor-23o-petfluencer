@@ -8,7 +8,7 @@ import { AuthContext } from '../AppContext/AppContext';
 // UserLinks component
 const UserLinks = () => {
 
-    const { signOutUser } = useContext(AuthContext);
+    const { signOutUser, user, userData } = useContext(AuthContext);
 
     return (
         // Container div for the entire user links section
@@ -85,7 +85,10 @@ const UserLinks = () => {
                 </Tooltip>
                 {/* User name */}
                 <p className="m1-4 font-roboto text-sm text-black font-medium no-underline">
-                    User
+                    {user?.displayName === null && userData?.name !== undefined
+                    ? userData?.name?.charAt(0)?.toUpperCase() +
+                    userData?.name?.slice(1)
+                    : user?.displayName?.split(" ")[0]}
                 </p>
             </div>
 
