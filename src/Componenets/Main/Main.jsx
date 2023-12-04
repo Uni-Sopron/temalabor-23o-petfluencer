@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState, useRef, useContext, useReducer, useEffect } from 'react'
 import { Avatar } from '@material-tailwind/react';
 import avatar from '../../assets/avatar.png';
 import { Button } from "@material-tailwind/react";
+import { AuthContext } from '../AppContext/AppContext';
+import { doc, collection, setDoc, serverTimestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from '../Firebase/firebase';
+import { PostReducer, postActions, postsStates } from '../AppContext/PostReducer';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 
 const handleImageUpload = () => {
@@ -13,7 +18,108 @@ const handleImageUpload = () => {
 };
 
 
+
+
 const Main = () => {
+
+    const { user, userData } = useContext(AuthContext);
+    const text = useRef("");
+    const scrollref = useRef(null);
+    const [image, setImage] = useState(null);
+    const collectionRef = collection(db, "posts");
+    const postRef = doc(collection(db, "posts"));
+    const document = postRef.id;
+    const [state, dispatch] = useReducer(PostReducer, postsStates);
+    const { SUBMIT_POST, HANDLE_ERROR } = postActions;
+    const [file, setFile] = useState(null);
+    const [progressBar, setProgressBar] = useState(0);
+
+    const handleUpload = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleSubmitPost = async (e) => {
+        if (text.current.value !== "") {           
+            try {
+             
+            await setDoc(postRef, {
+                documentId: document,
+                uid: user?.uid || userData?.uid,
+                logo: user?.photoURL,
+                name: user?.displayName || userData?.name,
+                email: user?.email || userData?.email,
+                text: text.current.value,
+                image: image,
+                timestamp: serverTimestamp(),
+            });
+            text.current.value = "";
+        } catch (err) {
+        dispatch({ type: HANDLE_ERROR });
+        alert(err.message);
+        console.log(err);
+            }
+        } else {
+            dispatch({ type: HANDLE_ERROR });
+        }
+    };
+
+    const storage = getStorage();
+
+    const metadata = {
+        contentType: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml']
+    };
+
+    const submitImage = async () => {
+        const fileType = metadata.contentType.includes(file["type"]);
+        console.log("file",file);
+        if (!file) {
+            return;
+        }
+        if (fileType) {
+            try {
+                const storageRef = ref(storage, `images/${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file, metadata.contentType);
+                await uploadTask.on('state_changed', (snapshot) => {
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setProgressBar(progress);
+                }, (error) => {
+                    alert(error);
+                    console.log(error);
+                }, async () => {
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        setImage(downloadURL);
+                    });
+                });
+            }
+            catch (err) {
+                dispatch({ type: HANDLE_ERROR });
+                alert(err.message);
+                console.log(err);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const postData = async () => {
+            const q = query(collectionRef, orderBy("timestamp", "asc"));
+            await onSnapshot(q, (doc) => {
+                dispatch({ 
+                    type: SUBMIT_POST, 
+                    posts: doc.docs.map((item) => item.data())
+                });
+                scrollref.current?.scrollIntoView({ behavior: "smooth" });
+                setImage(null);
+                setFile(null);
+                setProgressBar(0);
+            });
+        };
+
+        return () => postData();
+
+    }, [SUBMIT_POST] );
+
+
+
     return (
         <div className="flex flex-col items-center">
             <div className="flex flex-col py-4 w-full bg-white rounded-lg shadow-lg">
@@ -25,17 +131,18 @@ const Main = () => {
                         alt="avatar"
                         className="mr-3"
                     ></Avatar>
-                    <form className="w-full">
+                    <form className="w-full" onSubmit={handleSubmitPost}>
                         <div className="flex justify-between items-center">
                             <div className="w-full m1-4">
                                 <input
                                     type="text"
                                     name="text"
-                                    placeholder="Whats on your mind?"
+                                    placeholder={'What\'s on your mind ' + (user?.displayName?.split(" ")[0] || (userData?.name?.charAt(0).toUpperCase() + userData?.name?.slice(1)))}
                                     className="outline-none w-full bg-white rounded-md"
+                                    ref={text}
                                 ></input>
                             </div>
-                            <div className="mx-4">{/* put previewImage */}</div>
+                            <div className="mx-4">{image && <img className='h-24 rounded-xl' src={image} alt='previewImage'></img>}</div>
                             <div className='mr-4'>
                                 <Button variant="text" type="submit">
                                     Share
@@ -44,7 +151,7 @@ const Main = () => {
                         </div>
                     </form>
                 </div>
-                <span>{/* put ProgressBar */}</span>
+                <span style = {{width: `${progressBar}%`}} className='bg-blue-700 py-1 rounded-md'></span>
                 <div className="flex justify-around items-center pt-4">
                     <div className="flex items-center" >
                         <label
@@ -71,9 +178,10 @@ const Main = () => {
                                 id="addImage"
                                 type="file"
                                 style={{ display: "none" }}
+                                onChange={handleUpload}
                             ></input>
                         </label>
-
+                        {file && <Button variant='text' onClick={submitImage}>Upload</Button>}
                     </div>
                     <div className="flex items-center">
                         <svg
@@ -118,7 +226,7 @@ const Main = () => {
                 </div>
             </div>
             <div className="flex flex-col py-4 w-full">{/* posts */}</div>
-            <div>{/* efference for later */}</div>
+            <div ref={scrollref}></div>
         </div >
     )
 }
