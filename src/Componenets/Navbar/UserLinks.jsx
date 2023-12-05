@@ -81,7 +81,7 @@ const UserLinks = () => {
                 {/* Tooltip for the Avatar */}
                 <Tooltip content="Sign Out" placement="bottom">
                     {/* Avatar component with a tooltip */}
-                    <Avatar src={avatar} size="sm" alt="avatar"></Avatar>
+                    <Avatar src={user?.photoURL || avatar} size="sm" alt="avatar"></Avatar>
                 </Tooltip>
                 {/* User name */}
                 <p className="m1-4 font-roboto text-sm text-black font-medium no-underline">
