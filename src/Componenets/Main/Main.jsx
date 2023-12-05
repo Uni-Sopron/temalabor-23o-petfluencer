@@ -38,6 +38,7 @@ const Main = () => {
     };
 
     const handleSubmitPost = async (e) => {
+        e.preventDefault();
         if (text.current.value !== "") {           
             try {
              
@@ -253,4 +254,4 @@ const Main = () => {
     )
 }
 
-export default Main
+export default Main;
