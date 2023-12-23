@@ -11,7 +11,7 @@ const CommentSection = ({postId}) => {
     const comment = useRef("")
     const { user, userData } = useContext(AuthContext)
     const commentRef = doc(collection(db, 'posts', postId, 'comments'))
-    const [state, dispatch] = useReducer(PostReducer, postsStates)
+    const [state, dispatch] = useReducer(PostReducer, postsStates);
     const { ADD_COMMENT, HANDLE_ERROR } = postActions
 
     const addComment = async (e) => {
@@ -38,21 +38,23 @@ const CommentSection = ({postId}) => {
 
     useEffect(() => {
         const getComments = async () => {
-            try{
-                const collectionOfComments = collection(db, `posts/${postId}/comments`)
-                const q = query(collectionOfComments, orderBy('timestamp', 'desc'))
-                await onSnapshot(q, (doc) => {
-                    dispatch({ type: ADD_COMMENT, comments: doc.docs.map((item) => {
-                        item.data();
-                    })})
-                })
-            } catch(err) {
-                alert(err.message);
-                console.log(err.message)
-            }
-        }
-        return () => getComments()
-    }, [postId, ADD_COMMENT, HANDLE_ERROR])
+          try {
+            const collectionOfComments = collection(db, `posts/${postId}/comments`);
+            const q = query(collectionOfComments, orderBy("timestamp", "desc"));
+            await onSnapshot(q, (doc) => {
+              dispatch({
+                type: ADD_COMMENT,
+                comments: doc.docs?.map((item) => item.data()),
+              });
+            });
+          } catch (err) {
+            dispatch({ type: HANDLE_ERROR });
+            alert(err.message);
+            console.log(err.message);
+          }
+        };
+        return () => getComments();
+      }, [postId, ADD_COMMENT, HANDLE_ERROR]);
 
     return (
         <div className='flex flex-col bg-white w-full py-2 rounded-b-3x1'>
@@ -67,9 +69,16 @@ const CommentSection = ({postId}) => {
                 </form>
             </div>
         </div>
-        {state.comments?.map((comment, index) => {
-            return <Comment key={index} image={comment?.image} name={comment?.name} comment={comment?.comment}></Comment>
-        })}
+        {state?.comments?.map((comment, index) => {
+        return (
+          <Comment
+            key={index}
+            image={comment?.image}
+            name={comment?.name}
+            comment={comment?.comment}
+          ></Comment>
+        );
+      })}
     </div>
     )
 }
