@@ -7,7 +7,7 @@ import { doc, collection, setDoc, serverTimestamp, query, orderBy, onSnapshot } 
 import { db } from '../Firebase/firebase';
 import { PostReducer, postActions, postsStates } from '../AppContext/PostReducer';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import Alert from '@material-tailwind/react';
+import { Alert } from '@material-tailwind/react'
 import PostCard from './PostCard';
 
 
@@ -38,7 +38,7 @@ const Main = () => {
     };
 
     const handleSubmitPost = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if (text.current.value !== "") {           
             try {
              
@@ -117,6 +117,8 @@ const Main = () => {
         return () => postData();
 
     }, [SUBMIT_POST] );
+
+
 
     return (
         <div className="flex flex-col items-center">
@@ -223,35 +225,34 @@ const Main = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col py-4 w-full">{ state.error ? (
-                    <div className='flex justify-center items-center'>
+            <div className="flex flex-col py-4 w-full">
+                {state.error ? (
+                    <div className='flex fustify-center items-center'>
                         <Alert color="red">
-                            Something is went worng please refresh and try again...
+                            Something went wrong refresh and try again...
                         </Alert>
                     </div>
                 ) : (
                     <div>
-                        {state.posts.length > 0 && state?.posts?.map((post, index) => {
-                            return (
-                                <PostCard 
-                                    key={index} 
-                                    logo={post.logo} 
-                                    id={post.documentId} 
-                                    uid={post?.uid} 
-                                    name={post.name} 
-                                    image={post.image}
-                                    text={post.text}
-                                    timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
-                                ></PostCard>
-                            )})
-                        }
+                        {state.posts.length > 0 && state.posts?.map((post, index) => {
+                            return <PostCard 
+                                key={index}
+                                logo={post.logo}
+                                id={post.documentId}
+                                uid={post?.uid}
+                                name={post.name}
+                                email={post.email}
+                                image={post.image}
+                                text={post.text}
+                                timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
+                            ></PostCard>
+                        })}
                     </div>
-                ) 
-            }
+                )}
             </div>
             <div ref={scrollref}></div>
-        </div>
+        </div >
     )
 }
 
-export default Main;
+export default Main
