@@ -7,7 +7,7 @@ import remove from './../../assets/delete.png'
 import addFriend from './../../assets/addfriend.png'
 import { AuthContext } from '../AppContext/AppContext'
 import { PostReducer, postActions, postsStates } from '../AppContext/PostReducer'
-import { doc, collection, setDoc, serverTimestamp, query, orderBy, onSnapshot, where, updateDoc, arrayUnion, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, collection, setDoc, query, onSnapshot, where, updateDoc, arrayUnion, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from '../Firebase/firebase';
 import CommentSection from './CommentSection'
 
@@ -20,24 +20,59 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
     const likesCollection = collection(db, 'posts', id, "likes")
     const {ADD_LIKE, HANDLE_ERROR} = postActions
     const [open, setOpen] = useState(false)
+    const singlePostDocument = doc(db, 'posts', id)
 
     const handleOpen = (e) => {
         e.preventDefault();
         setOpen(true)
     }
 
+    
     const addUser = async () => {
         try {
-            const q = query(collection(db, "users", where('uid', '==', user?.uid)))
-            const doc = await getDocs(q)
-            const data = doc.docs[0].ref
-            await updateDoc(doc(data, {
-                friends: arrayUnion({
-                    id: uid,
-                    image: logo,
-                    name: name,
+        const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+        const doc = await getDocs(q);
+        const data = doc.docs[0].ref;
+        await updateDoc(data, {
+            friends: arrayUnion({
+            id: uid,
+            image: logo,
+            name: name,
+            }),
+        });
+        } catch (err) {
+        alert(err.message);
+        console.log(err.message);
+        }
+    };
+
+    const handleLike = async (e) => {
+        e.preventDefault()
+        const q = query(likesCollection, where('id', '==', user?.uid))
+        const querySnapshot = await getDocs(q)
+        const likesDocId = await querySnapshot?.docs[0]?.id
+        try {
+            if (likesDocId !== undefined) {
+                const deleteId = doc(db, 'posts', id, 'likes', likesDocId)
+                await deleteDoc(deleteId)
+            } else {
+                await setDoc(likesRef, {
+                    id: user?.uid
                 })
-            }))
+            }
+        } catch (err) {
+            alert(err.message)
+            console.log(err.message)
+        }
+    }
+    const deletePost = async (e) => {
+        e.preventDefault()
+        try {
+            if (user?.uid === uid) {
+                await deleteDoc(singlePostDocument)
+            } else {
+                alert("You can't delete other user's post!")
+            }
         } catch (err) {
             alert(err.message)
             console.log(err.message)
@@ -66,26 +101,6 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
         }
         return () => getLikes()
     }, [id, ADD_LIKE, HANDLE_ERROR])
-
-    const handleLike = async (e) => {
-        e.preventDefault()
-        const q = query(likesCollection, where('id', '==', user?.uid))
-        const querySnapshot = await getDocs(q)
-        const likesDocId = await querySnapshot?.docs[0]?.id
-        try {
-            if (likesDocId !== undefined) {
-                const deleteId = doc(db, 'posts', id, 'likes', likesDocId)
-                await deleteDoc(deleteId)
-            } else {
-                await setDoc(likesRef, {
-                    id: user?.uid
-                })
-            }
-        } catch (err) {
-            alert(err.message)
-            console.log(err.message)
-        }
-    }
 
   return (
     <div className='mb-4'>
@@ -128,7 +143,7 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
                         </p>
                     </div>
                 </div>
-                <div className='flex items-cente cursor-pointer rounded-lg p-2 hover:bg-gray-100r'>
+                <div className='flex items-cente cursor-pointer rounded-lg p-2 hover:bg-gray-100r' onClick={deletePost}>
                     <img src={remove} className='h-8 mr-4' alt='delete'></img>
                     <p className='font-roboto font-medium text-md text text-gray-700 no-underline tracking-normal leading-none'>
                         Delete
