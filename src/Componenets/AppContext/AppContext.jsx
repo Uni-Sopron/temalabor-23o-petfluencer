@@ -72,11 +72,11 @@ const AppContext = ({ children }) => {
         name,
         providerId: "email/password",
         email: user.email,
-        kind: "-",
-        species: "-",
-        dateOfBirth: "-",
-        habitat: "-",
-        description: "-",
+        kind: "kind",
+        species: "species",
+        dateOfBirth: "dateOfBirth",
+        habitat: "habitat",
+        description: "descriptionb",
       });
     } catch (err) {
       alert(err.message);
