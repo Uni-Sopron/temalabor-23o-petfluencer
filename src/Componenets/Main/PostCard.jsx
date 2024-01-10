@@ -50,7 +50,7 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
         e.preventDefault()
         const q = query(likesCollection, where('id', '==', user?.uid))
         const querySnapshot = await getDocs(q)
-        const likesDocId = await querySnapshot?.docs[0]?.id
+        const likesDocId = querySnapshot?.docs[0]?.id
         try {
             if (likesDocId !== undefined) {
                 const deleteId = doc(db, 'posts', id, 'likes', likesDocId)
@@ -83,7 +83,7 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
         const getLikes = async () => {
             try{
                 const q = collection(db, 'posts', id, 'likes')
-                await onSnapshot(q, (doc) => {
+                onSnapshot(q, (doc) => {
                     dispatch({ 
                         type: ADD_LIKE,
                         likes: doc.docs.map((item) => {
@@ -114,7 +114,7 @@ const PostCard = ({uid, id, logo, name, email, text, image, timestamp}) => {
                 ></Avatar>
                 <div className='flex flex-col'>
                     <p className='ml-4 py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none'>
-                        {email}
+                        {name}
                     </p>
                     <p className='ml-4 py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none'>
                         Published: {timestamp}

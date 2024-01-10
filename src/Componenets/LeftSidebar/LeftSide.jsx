@@ -1,23 +1,31 @@
-import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Tooltip } from '@material-tailwind/react';
-import { Avatar } from '@material-tailwind/react';
-import animal from '../../assets/animal.jpg'
-import avatar from '../../assets/avatar.png'
-import facebook from '../../assets/facebook.png'
-import twitter from '../../assets/twitter.png'
-import laptop from '../../assets/laptop.jpg'
-import media from '../../assets/media.jpg'
-import apps from '../../assets/apps.jpg'
-import dogmarket from '../../assets/dogmarket.png'
-import { AuthContext } from '../AppContext/AppContext';
-
-
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { Tooltip } from "@material-tailwind/react";
+import { Avatar } from "@material-tailwind/react";
+import animal from "../../assets/animal.jpg";
+import avatar from "../../assets/avatar.png";
+import facebook from "../../assets/facebook.png";
+import twitter from "../../assets/twitter.png";
+import laptop from "../../assets/laptop.jpg";
+import media from "../../assets/media.jpg";
+import apps from "../../assets/apps.jpg";
+import dogmarket from "../../assets/dogmarket.png";
+import { AuthContext } from "../AppContext/AppContext";
+import { collection, setDoc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
+import { HANDLE_ERROR } from "../AppContext/PostReducer";
+import { collectionUsersRef } from "../AppContext/AppContext";
+import { getDocs, query, where } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 
 const LeftSide = () => {
   const [data, setData] = useState([]);
   const count = useRef(0);
   const { user, userData } = useContext(AuthContext);
-
+  const [kind, setKind] = useState("");
+  const [species, setSpecies] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [habitat, setHabitat] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleRandom = (arr) => {
     setData(arr[Math.floor(Math.random() * arr?.length)]);
@@ -75,28 +83,131 @@ const LeftSide = () => {
     }
   };
 
+  const addData = async (e) => {
+    e.preventDefault();
+  
+    const collectionUsersRef = collection(db, "users");
+    const q = query(collectionUsersRef, where("uid", "==", user.uid));
+  
+    try {
+      const querySnapshot = await getDocs(q);
+  
+      // Check if there is a document with the specified UID
+      if (querySnapshot.size > 0) {
+        const userDocRef = querySnapshot.docs[0].ref;
+  
+        // Check if all fields are not empty before updating the document
+        if (kind !== "" && species !== "" && dateOfBirth !== "" && habitat !== "" && description !== "") {
+          // Update the document with the new data
+          await updateDoc(userDocRef, {
+            kind: kind,
+            species: species,
+            dateOfBirth: dateOfBirth,
+            habitat: habitat,
+            description: description,
+            // Add other fields if needed
+          });
+  
+          // Clear the form inputs
+          setKind("");
+          setSpecies("");
+          setDateOfBirth("");
+          setHabitat("");
+          setDescription("");
+  
+          console.log("Data updated successfully!");
+        } else {
+          throw new Error("All fields must be filled");
+        }
+      } else {
+        // Handle the case where no document is found with the specified UID
+        console.log("User not found");
+      }
+    } catch (err) {
+      alert(err.message);
+      console.error(err.message);
+    }
+  };
+  
+
   return (
     <div className="flex flex-col h-screen bg-white pb-4 border-2 rounded-r-xl shadow-1g">
       <div className="flex flex-col items-center relative">
-        <img className="h-40 w-full rounded-r-x1" src={animal} alt="animal"></img>
+        <img
+          className="h-40 w-full rounded-r-x1"
+          src={animal}
+          alt="animal"
+        ></img>
         <div className="absolute -bottom-4">
           <Tooltip content="Profile" placement="top">
-            <Avatar size='md' src={user?.photoURL || avatar} alt="avatar"></Avatar>
+            <Avatar
+              size="md"
+              src={user?.photoURL || avatar}
+              alt="avatar"
+            ></Avatar>
           </Tooltip>
         </div>
       </div>
 
-
       <div className="flex flex-col items-center pt-6">
         <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
-          {user?.email || userData?.email}
+          {user?.displayName || userData?.displayName}
         </p>
-        <p className="font-roboto font-medium text-xs text-gray-700 no-underline tracking-normal leading-none">
-          Access exclusive tools & insights </p>
-        <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none py-2">
-          Try premium for free </p>
+      </div>
+      <div className="flex flex-col items-center pt-2">
+        <input
+          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
+          name="kind"
+          value={kind}
+          onChange={(e) => setKind(e.target.value)}
+          placeholder={user?.kind || userData?.kind}
+          type="name"
+        ></input>
+      </div>
+      <div className="flex flex-col items-center pt-2">
+        <input
+          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
+          name="species"
+          value={species}
+          onChange={(e) => setSpecies(e.target.value)}
+          placeholder={user?.species || userData?.species}
+          type="name"
+        ></input>
+      </div>
+      <div className="flex flex-col items-center pt-2">
+        <input
+          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
+          name="dateOfBirth"
+          value={dateOfBirth}
+          onChange={(e) => setDateOfBirth(e.target.value)}
+          placeholder={user?.dateOfBirth || userData?.dateOfBirth}
+          type="text"
+        ></input>
+      </div>
+      <div className="flex flex-col items-center pt-2">
+        <input
+          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
+          name="habitat"
+          value={habitat}
+          onChange={(e) => setHabitat(e.target.value)}
+          placeholder={user?.habitat || userData?.habitat}
+          type="name"
+        ></input>
+      </div>
+      <div className="flex flex-col items-center pt-2">
+        <input
+          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
+          name="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder={user?.description || userData?.description}
+          type="text"
+        ></input>
       </div>
 
+      <button className="asd" type="submit" onClick={addData}>
+        Submit
+      </button>
 
       <div className="flex flex-col">
         <div className="flex items-center pb-4">
@@ -121,7 +232,6 @@ const LeftSide = () => {
         </div>
       </div>
 
-
       <div className="flex flex-col">
         <div className="flex items-center pb-4 flex">
           <svg
@@ -141,20 +251,6 @@ const LeftSide = () => {
 
           <p className="font-roboto font-bold text-1g no-underline tracking-normal leading-none">
             React Developer
-          </p>
-        </div>
-        <div className="flex justify-center items-center pt-4">
-          <p className="font-roboto font-bold text-md text-green-500 no-underline tracking-normal leading-none">
-            Events
-          </p>
-          <p className="font-roboto font-bold text-md text-green-500 no-underline tracking-normal leading-none mx-2">
-            Groups
-          </p>
-          <p className="font-roboto font-bold text-md text-green-500 no-underline tracking-normal leading-none">
-            Follow
-          </p>
-          <p className="font-roboto font-bold text-md text-green-500 no-underline tracking-normal leading-none mx-2">
-            More
           </p>
         </div>
       </div>

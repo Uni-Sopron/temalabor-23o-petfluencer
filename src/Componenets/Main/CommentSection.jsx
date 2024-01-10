@@ -22,8 +22,7 @@ const CommentSection = ({postId}) => {
                     id: commentRef.id,
                     comment: comment.current.value,
                     image: user?.photoURL,
-                    name: user?.email,
-                    /*name: user?.displayName.split(" ")[0] || userData?.name?.chartAt(0)?.toUpperCase() + userData?.name?.slice(1),*/
+                    name: user?.displayName,
                     timestamp: serverTimestamp(),
                 })
                 comment.current.value = ""
@@ -41,7 +40,7 @@ const CommentSection = ({postId}) => {
           try {
             const collectionOfComments = collection(db, `posts/${postId}/comments`);
             const q = query(collectionOfComments, orderBy("timestamp", "desc"));
-            await onSnapshot(q, (doc) => {
+            onSnapshot(q, (doc) => {
               dispatch({
                 type: ADD_COMMENT,
                 comments: doc.docs?.map((item) => item.data()),
