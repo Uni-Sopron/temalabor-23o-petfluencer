@@ -1,7 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useContext } from 'react';
+import { useState } from 'react';
+import { AuthContext } from '../AppContext/AppContext';
+import { Avatar } from '@material-tailwind/react';
+import avatar from "../../assets/avatar.png";
+import { Link } from 'react-router-dom';
+import { collection, getDocs} from 'firebase/firestore';
+import { db } from '../Firebase/firebase';
 
 // NavLinks component
 const NavLinks = () => {
+    const [input, setInput] = useState('');
+    const { selected, setSelected } = useContext(AuthContext);
+    const [users, setUsers] = useState([]);
+
+    const search = (data) => {
+        console.log(data)
+        return data.filter((item) =>
+          item["name"].toLowerCase().includes(input.toLowerCase())
+        );
+    };
+
+    const getUsers = async () => {
+        try {
+            let data = []
+            const querySnapshot = await getDocs(collection(db, "users"));
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data());
+            });
+            setUsers(data)
+        } catch (error) {
+            console.error("Error getting documents: ", error);
+        }
+    };
+
+    const handleInputClick = () => {
+        getUsers();
+        setSelected(true);
+    }
+
+    useEffect(() => {
+        return () => getUsers();
+    }, [])
+
     return (
         // Container div for the entire navigation links section
         <div className="flex justify-center items-center cursor-pointer">
@@ -80,6 +121,59 @@ const NavLinks = () => {
                         d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" 
                     />
                 </svg>
+            </div>
+            <div>
+                <input
+                    className="border-0 outline-none mt-4"
+                    name="input"
+                    value={input}
+                    type="text"
+                    placeholder="Search friends"
+                    onChange={(e) => setInput(e.target.value)}
+                    style={{
+                        marginLeft: "100px"
+                    }}
+                    onClick={() => { 
+                        if (selected === false) { handleInputClick() }
+                        else { setSelected(false) }
+                    }}
+                ></input>
+            </div>  
+            <div style={{
+                position: "absolute",
+                top: "50px",
+                left: "900px",
+                backgroundColor: "white",
+                width: "300px"
+            }}>
+            {users?.length > 0 && selected === true ? (
+                search(users)?.map((user) => {
+                    return (
+                    <div
+                        className="flex items-center justify-between hover:bg-gray-100 duration-300 ease-in-out"
+                        key={user.id}
+                    >
+                        <Link to={`/profile/${user.id}`}>
+                        <div className="flex items-center my-2 cursor-pointer">
+                            <div className="flex items-center">
+                            <Avatar
+                                size="sm"
+                                variant="circular"
+                                src={user?.image || avatar}
+                                alt="avatar"
+                            ></Avatar>
+                            <p className="ml-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+                                {user.name}
+                            </p>
+                            </div>
+                        </div>
+                        </Link>
+                    </div>
+                    );
+                })
+                ) : (
+                null
+                )}
             </div>
         </div>
     );
