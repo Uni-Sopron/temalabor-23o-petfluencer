@@ -25,6 +25,7 @@ const AppContext = ({ children }) => {
   const provider = new GoogleAuthProvider();
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();
+  const [selected, setSelected] = useState();
 
   const navigate = useNavigate();
 
@@ -136,6 +137,8 @@ const AppContext = ({ children }) => {
     signOutUser: signOutUser,
     user: user,
     userData: userData,
+    selected: selected, 
+    setSelected: setSelected
   };
 
   return (
