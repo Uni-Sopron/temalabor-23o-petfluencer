@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import LeftSide from "../LeftSidebar/LeftSide";
 import RightSide from "../RightSidebar/RightSide";
 import Navbar from "../Navbar/Navbar";
-import Main from "../Main/Main";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 import profilePic from "./../../assets/animal.jpg";

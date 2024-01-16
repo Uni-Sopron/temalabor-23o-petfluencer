@@ -13,7 +13,6 @@ const CardSection = () => {
                 id={card.id}
                 name={card.name}
                 img={card.image}
-                status={card.status}
               ></Card>
             </div>
           );

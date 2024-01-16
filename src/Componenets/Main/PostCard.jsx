@@ -63,6 +63,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
     }
   };
 
+
   const deletePost = async (e) => {
     e.preventDefault();
     try {
@@ -180,10 +181,14 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         <div>{renderTextWithHashtags()}</div>
         {image && <img className='h-[500px] w-full' src={image} alt='postImage'></img>}
         <div className='flex justify-around items-center pt-4'>
-          <button className='flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100' onClick={handleLike}>
-            <img className='h-8 mr-4' src={like} alt='' />
-            {state.likes?.length > 0 && state.likes?.length}
-          </button>
+        <button
+        className='flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100'
+        onClick={handleLike}
+        style={{ color: state.likes?.some(like => like.id === user?.uid) ? 'blue' : 'black' }}
+      >
+        <img className='h-8 mr-4' src={like} alt='' />
+        {state.likes?.length > 0 && state.likes?.length}
+      </button>
           <div
             className='flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100'
             onClick={handleOpen}

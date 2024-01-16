@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
     return (
         // Container div for the entire navbar
-        <div className="flex justify-between items-center border-b border-gray-100 w-full px-44 py-2">
+        <div className="flex justify-between items-center border-b border-gray-100 w-full px-5 py-2">
         <Link to="/"></Link>
 
             {/* Logo and Title */}

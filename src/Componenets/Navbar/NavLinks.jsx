@@ -131,7 +131,9 @@ const NavLinks = () => {
                     placeholder="Search friends"
                     onChange={(e) => setInput(e.target.value)}
                     style={{
-                        marginLeft: "100px"
+                        marginLeft: "250px",
+                        marginRight: "300px",
+                        marginBottom: "5px",
                     }}
                     onClick={() => { 
                         if (selected === false) { handleInputClick() }
