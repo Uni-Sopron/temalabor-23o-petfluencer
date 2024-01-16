@@ -20,6 +20,7 @@ const RightSide = () => {
   const [input, setInput] = useState("");
   const { user, userData } = useContext(AuthContext);
   const friendList = userData?.friends;
+  const [startIndex, setStartIndex] = useState(0);
 
   const searchFriends = (data) => {
     return data.filter((item) =>
@@ -37,6 +38,18 @@ const RightSide = () => {
     });
   };
 
+  const handleScroll = (direction) => {
+    const step = 1; // Number of friends to display at a time
+    const maxVisibleFriends = 4;
+  
+    if (direction === "up" && startIndex > 0) {
+      setStartIndex((prevIndex) => Math.max(0, prevIndex - step));
+    } else if (direction === "down" && startIndex + step + maxVisibleFriends <= friendList?.length) {
+      setStartIndex((prevIndex) => Math.min(friendList?.length - maxVisibleFriends, prevIndex + step));
+    }
+  };
+
+
   return (
     <div className="flex flex-col h-screen bg-white shadow-lg border-2 rounded-l-xl">
       <div className="flex flex-col items-center relative pt-10">
@@ -48,7 +61,7 @@ const RightSide = () => {
         immensity of the great outdoors, to miraculous moments in your own
         backyard.
       </p>
-      <div className="mx-2 mt-10">
+      <div className="mx-2 mt-10 max-h-96 overflow-hidden relative">
         <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
           Friends:{" "}
         </p>
@@ -60,13 +73,14 @@ const RightSide = () => {
           placeholder="Search friends"
           onChange={(e) => setInput(e.target.value)}
         ></input>
-        {friendList?.length > 0 ? (
-          searchFriends(friendList)?.map((friend) => {
-            return (
-              <div
-                className="flex items-center justify-between hover:bg-gray-100 duration-300 ease-in-out"
-                key={friend.id}
-              >
+        <div className="flex flex-col items-start">
+          {friendList?.length > 0 ? (
+            searchFriends(friendList)?.slice(startIndex, startIndex + 4).map((friend, index) => {
+              return (
+                <div
+                  className="flex items-center justify-between hover:bg-gray-100 duration-300 ease-in-out"
+                  key={friend.id}
+                >
                 <Link to={`/profile/${friend.id}`}>
                   <div className="flex items-center my-2 cursor-pointer">
                     <div className="flex items-center">
@@ -92,14 +106,29 @@ const RightSide = () => {
                     alt="deleteFriend"
                   ></img>
                 </div>
-              </div>
-            );
-          })
-        ) : (
-          <p className="mt-10 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
-            Add friends to check their profile
-          </p>
-        )}
+                </div>
+              );
+            })
+          ) : (
+            <p className="mt-10 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+              Add friends to check their profile
+            </p>
+          )}
+        </div>
+        <div className="mt-8 flex justify-center items-center space-x-4">
+          <button
+            onClick={() => handleScroll("up")}
+            className="bg-gray-400 text-white rounded-full p-2"
+          >
+            Up
+          </button>
+          <button
+            onClick={() => handleScroll("down")}
+            className="bg-gray-400 text-white rounded-full p-2"
+          >
+            Down
+          </button>
+        </div>
       </div>
     </div>
   );
