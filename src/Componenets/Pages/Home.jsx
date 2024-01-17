@@ -6,6 +6,7 @@ import Main from '../Main/Main';
 
 
 const Home = () => {
+    console.log(process.env, "process.env")
   return (
     <div className="w-full">
       <div className="fixed top-0 z-10 w-full bg-white">
