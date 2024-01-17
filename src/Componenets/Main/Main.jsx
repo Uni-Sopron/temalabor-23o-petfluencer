@@ -121,7 +121,7 @@ const Main = () => {
 
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mt-5">
             <div className="flex flex-col py-4 w-full bg-white rounded-lg shadow-lg">
                 <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-4 w-full">
                     <Avatar
@@ -152,7 +152,7 @@ const Main = () => {
                     </form>
                 </div>
                 <span style = {{width: `${progressBar}%`}} className='bg-blue-700 py-1 rounded-md'></span>
-                <div className="flex justify-around items-center pt-4">
+                <div className="flex justify-around items-center pt-4 ">
                     <div className="flex items-center" >
                         <label
                             onClick={handleImageUpload}
