@@ -6,7 +6,7 @@ import { Avatar } from '@material-tailwind/react';
 import avatar from "../../assets/avatar.png";
 import { Link } from 'react-router-dom';
 import { collection, getDocs} from 'firebase/firestore';
-import { db } from '../Firebase/firebase';
+import { db } from "../../Config/firebase";
 
 // NavLinks component
 const NavLinks = () => {

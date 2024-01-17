@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { AuthContext } from '../AppContext/AppContext';
-import { auth, onAuthStateChanged } from '../Firebase/firebase';
+import { auth, onAuthStateChanged } from "../../Config/firebase";
 
 const Register = () => {
     const [loading, setLoading]  = useState(false);

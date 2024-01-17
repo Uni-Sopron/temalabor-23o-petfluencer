@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { auth, db, onAuthStateChanged } from "../Firebase/firebase";
+import { auth, db, onAuthStateChanged } from "../../Config/firebase";
 import {
   query,
   where,
@@ -137,8 +137,8 @@ const AppContext = ({ children }) => {
     signOutUser: signOutUser,
     user: user,
     userData: userData,
-    selected: selected, 
-    setSelected: setSelected
+    selected: selected,
+    setSelected: setSelected,
   };
 
   return (

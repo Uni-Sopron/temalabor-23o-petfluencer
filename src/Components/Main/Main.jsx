@@ -4,7 +4,7 @@ import avatar from '../../assets/avatar.png';
 import { Button } from "@material-tailwind/react";
 import { AuthContext } from '../AppContext/AppContext';
 import { doc, collection, setDoc, serverTimestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../Firebase/firebase';
+import { db } from '../../Config/firebase';
 import { PostReducer, postActions, postsStates } from '../AppContext/PostReducer';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Alert } from '@material-tailwind/react'

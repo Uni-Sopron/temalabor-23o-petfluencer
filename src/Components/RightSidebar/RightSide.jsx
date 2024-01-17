@@ -14,7 +14,7 @@ import {
   arrayRemove,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../Firebase/firebase";
+import { db } from "../../Config/firebase";
 
 const RightSide = () => {
   const [input, setInput] = useState("");

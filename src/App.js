@@ -1,7 +1,7 @@
 import "./App.css";
-import Pages from "./Componenets/Pages/Pages";
+import Pages from "./Components/Pages/Pages";
 import { BrowserRouter } from "react-router-dom";
-import AppContext from "./Componenets/AppContext/AppContext";
+import AppContext from "./Components/AppContext/AppContext";
 
 function App() {
     return (

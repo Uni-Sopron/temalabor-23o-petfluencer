@@ -7,7 +7,7 @@ import facebook from "../../assets/facebook.png";
 import twitter from "../../assets/twitter.png";
 import { AuthContext } from "../AppContext/AppContext";
 import { collection, } from "firebase/firestore";
-import { db } from "../Firebase/firebase";
+import { db } from "../../Config/firebase";
 import { getDocs, query, where } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
 

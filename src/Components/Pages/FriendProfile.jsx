@@ -3,7 +3,7 @@ import LeftSide from "../LeftSidebar/LeftSide";
 import RightSide from "../RightSidebar/RightSide";
 import Navbar from "../Navbar/Navbar";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../Firebase/firebase";
+import { db } from "../../Config/firebase";
 import profilePic from "./../../assets/animal.jpg";
 import { Avatar } from "@material-tailwind/react";
 import avatar from "./../../assets/avatar.png";
