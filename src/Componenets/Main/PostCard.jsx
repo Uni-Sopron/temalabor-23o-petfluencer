@@ -7,7 +7,7 @@ import remove from './../../assets/delete.png';
 import addFriend from './../../assets/addfriend.png';
 import { AuthContext } from '../AppContext/AppContext';
 import { PostReducer, postActions, postsStates } from '../AppContext/PostReducer';
-import { doc, collection, setDoc, query, onSnapshot, where, updateDoc, arrayUnion, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, collection, setDoc, query, onSnapshot, where, updateDoc, arrayUnion, getDocs, deleteDoc, orderBy } from 'firebase/firestore';
 import { db } from '../Firebase/firebase';
 import CommentSection from './CommentSection';
 
@@ -133,7 +133,8 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         onSnapshot(q, (doc) => {
           dispatch({
             type: ADD_LIKE,
-            likes: doc.docs.map((item) => item.data()),
+            likes: doc.docs
+            .map((item) => item.data()),
           });
         });
       } catch (err) {
