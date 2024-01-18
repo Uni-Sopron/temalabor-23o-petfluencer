@@ -37,30 +37,31 @@ const Main = () => {
     };
 
     const handleSubmitPost = async (e) => {
-        e.preventDefault()
-        if (text.current.value !== "") {           
+        e.preventDefault();
+    
+        if (text.current.value || image) {
             try {
-             
-            await setDoc(postRef, {
-                documentId: document,
-                uid: user?.uid || userData?.uid,
-                logo: user?.photoURL,
-                name: user?.displayName || userData?.name,
-                email: user?.email || userData?.email,
-                text: text.current.value,
-                image: image,
-                timestamp: serverTimestamp(),
-            });
-            text.current.value = "";
-        } catch (err) {
-        dispatch({ type: HANDLE_ERROR });
-        alert(err.message);
-        console.log(err);
+                await setDoc(postRef, {
+                    documentId: document,
+                    uid: user?.uid || userData?.uid,
+                    logo: user?.photoURL,
+                    name: user?.displayName || userData?.name,
+                    email: user?.email || userData?.email,
+                    text: text.current.value,
+                    image: image,
+                    timestamp: serverTimestamp(),
+                });
+                text.current.value = "";
+            } catch (err) {
+                dispatch({ type: HANDLE_ERROR });
+                alert(err.message);
+                console.log(err);
             }
         } else {
             dispatch({ type: HANDLE_ERROR });
         }
     };
+    
 
     const storage = getStorage();
 
