@@ -23,7 +23,6 @@ const Main = () => {
 
     const { user, userData } = useContext(AuthContext);
     const text = useRef("");
-    const scrollref = useRef(null);
     const [image, setImage] = useState(null);
     const collectionRef = collection(db, "posts");
     const postRef = doc(collection(db, "posts"));
@@ -107,7 +106,6 @@ const Main = () => {
                     type: SUBMIT_POST, 
                     posts: doc.docs.map((item) => item.data())
                 });
-                scrollref.current?.scrollIntoView({ behavior: "smooth" });
                 setImage(null);
                 setFile(null);
                 setProgressBar(0);
@@ -250,7 +248,6 @@ const Main = () => {
                     </div>
                 )}
             </div>
-            <div ref={scrollref}></div>
         </div >
     )
 }
