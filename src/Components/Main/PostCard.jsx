@@ -22,13 +22,13 @@ import {
   arrayUnion,
   getDocs,
   deleteDoc,
-  orderBy,
 } from "firebase/firestore";
 import { db } from "../../Config/firebase";
 import CommentSection from "./CommentSection";
 
 const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
-  const { user } = useContext(AuthContext);
+  const { user, userData } = useContext(AuthContext);
+  const isUidInFriendList = userData?.friends.some(friend => friend.id === uid);
   const [state, dispatch] = useReducer(PostReducer, postsStates);
   const likesRef = doc(collection(db, "posts", id, "likes"));
   const likesCollection = collection(db, "posts", id, "likes");
@@ -179,7 +179,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
               Published: {timestamp}
             </p>
           </div>
-          {user?.uid !== uid && (
+          {(user?.uid !== uid && isUidInFriendList === false) && (
             <div
               onClick={addUser}
               className="w-full flex justify-end cursor-pointer mr-10"
@@ -194,7 +194,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         </div>
         <div>{renderTextWithHashtags()}</div>
         {image && (
-          <img className="h-[500px] w-full" src={image} alt="postImage"></img>
+          <img className="w-full" src={image} alt="postImage"></img>
         )}
         <div className="flex justify-around items-center pt-4">
           <button
