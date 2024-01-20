@@ -27,13 +27,15 @@ import { db } from "../../Config/firebase";
 import CommentSection from "./CommentSection";
 
 const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
-  const { user } = useContext(AuthContext);
+  const { user, userData } = useContext(AuthContext);
   const [state, dispatch] = useReducer(PostReducer, postsStates);
   const likesRef = doc(collection(db, "posts", id, "likes"));
   const likesCollection = collection(db, "posts", id, "likes");
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
   const [open, setOpen] = useState(false);
   const singlePostDocument = doc(db, "posts", id);
+  const isUidInFriendList = userData?.friends.some(friend => friend.id === uid);
+ 
 
   const handleOpen = (e) => {
     e.preventDefault();
@@ -177,7 +179,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
               Published: {timestamp}
             </p>
           </div>
-          {user?.uid !== uid && (
+          {(user?.uid !== uid && isUidInFriendList === false) && (
             <div
               onClick={addUser}
               className="w-full flex justify-end cursor-pointer mr-10"
