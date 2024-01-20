@@ -18,7 +18,6 @@ const LeftSide = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [habitat, setHabitat] = useState("");
   const [description, setDescription] = useState("");
-  console.log(process.env.REACT_APP_apiKey, "process.envesfgewsfwefwefwef")
 
 
   const addData = async (e) => {

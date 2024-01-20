@@ -20,7 +20,6 @@ const handleImageUpload = () => {
 };
 
 const Main = () => {
-
     const { user, userData } = useContext(AuthContext);
     const text = useRef("");
     const [image, setImage] = useState(null);
@@ -31,11 +30,11 @@ const Main = () => {
     const { SUBMIT_POST, HANDLE_ERROR } = postActions;
     const [file, setFile] = useState(null);
     const [progressBar, setProgressBar] = useState(0);
-
+    
     const handleUpload = (e) => {
         setFile(e.target.files[0]);
     };
-
+    
     const handleSubmitPost = async (e) => {
         e.preventDefault();
     
@@ -87,6 +86,7 @@ const Main = () => {
                     console.log(error);
                 }, async () => {
                     await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log(downloadURL, "downloadURL")
                         setImage(downloadURL);
                     });
                 });
