@@ -209,7 +209,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
             }}
           >
             <img className="h-8 mr-4" src={like} alt="" />
-            {state.likes?.length > 0 && state.likes?.length}
+            {state.likes?.length >= 0 && state.likes?.length}
           </button>
           <div
             className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100"
