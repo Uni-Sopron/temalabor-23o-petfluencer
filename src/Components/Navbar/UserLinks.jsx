@@ -1,13 +1,80 @@
 // Import React and required components from the Material Tailwind library
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Avatar } from '@material-tailwind/react';
 import avatar from '../../assets/avatar.png';
 import { AuthContext } from '../AppContext/AppContext';
+import { uploadProfilePicture, auth } from '../../Config/firebase';
+import { getFirestore, doc, updateDoc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+
+
 
 // UserLinks component
 const UserLinks = () => {
 
     const { signOutUser, user, userData } = useContext(AuthContext);
+    const fileInputRef = useRef(null);
+    const [photoURL, setPhotoURL] = useState(null);
+
+    // Effect to set the initial state for photoURL after user authentication state is loaded
+    useEffect(() => {
+        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userDocRef = doc(getFirestore(), 'users', user.uid);
+
+                const unsubscribeFirestore = onSnapshot(userDocRef, (doc) => {
+                    if (doc.exists()) {
+                        const userData = doc.data();
+                        setPhotoURL(userData.photoURL || avatar);
+                    }
+                });
+            }
+        });
+
+        return () => {
+            unsubscribeAuth();
+            // Unsubscribe from Firestore listener if needed
+        };
+    }, []);
+
+    const handleAvatarClick = () => {
+        // Trigger the file input when the avatar is clicked
+        fileInputRef.current.click();
+      };
+    
+      const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            // Get the current user from Firebase Auth
+            const currentUser = auth.currentUser;
+      
+            // Upload the file to Firebase Storage
+            const downloadURL = await uploadProfilePicture(currentUser.uid, file);
+            const userDocRef = doc(getFirestore(), 'users', currentUser.uid);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                // Update the user's photoURL and avatar in Firestore
+                await updateDoc(userDocRef, {
+                    photoURL: downloadURL,
+                    avatar: downloadURL,
+                });
+            } else {
+                // If the user document doesn't exist, create it
+                await setDoc(userDocRef, {
+                    photoURL: downloadURL,
+                    avatar: downloadURL,
+                });
+            }
+
+            setPhotoURL(downloadURL);
+
+          } catch (error) {
+            console.error('Error updating profile:', error.message);
+          }
+        }
+      };
 
     return (
         // Container div for the entire user links section
@@ -75,15 +142,21 @@ const UserLinks = () => {
                 </svg>
             </div>
 
-             {/* Avatar and User Info Section */}
-            <div className="mx-4 flex items-center">   
-                    <Avatar src={user?.photoURL || avatar} size="sm" alt="avatar"></Avatar>
+             {/* Avatar Section with File Input */}
+            <div className="mx-4 flex items-center">
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                />
+                <Avatar src={photoURL} size="sm" alt="avatar" onClick={handleAvatarClick}></Avatar>
                 {/* User name */}
                 <p className="m1-4 font-roboto text-sm text-black font-medium no-underline">
                     {user?.displayName === null && userData?.name !== undefined
-                    ? userData?.name?.charAt(0)?.toUpperCase() +
-                    userData?.name?.slice(1)
-                    : user?.displayName?.split(" ")[0]}
+                        ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1)
+                        : user?.displayName?.split(" ")[0]}
                 </p>
 
                 {/* Sign Out button */}
