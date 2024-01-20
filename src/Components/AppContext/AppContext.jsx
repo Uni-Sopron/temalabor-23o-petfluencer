@@ -46,7 +46,7 @@ const AppContext = ({ children }) => {
           species: "species",
           dateOfBirth: "dateOfBirth",
           habitat: "habitat",
-          description: "descriptionb",
+          description: "description",
         });
       }
     } catch (err) {
@@ -77,7 +77,7 @@ const AppContext = ({ children }) => {
         species: "species",
         dateOfBirth: "dateOfBirth",
         habitat: "habitat",
-        description: "descriptionb",
+        description: "description",
       });
     } catch (err) {
       alert(err.message);
