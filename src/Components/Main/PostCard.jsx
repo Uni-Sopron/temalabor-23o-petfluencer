@@ -34,8 +34,10 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
   const [open, setOpen] = useState(false);
   const singlePostDocument = doc(db, "posts", id);
-  const isUidInFriendList = userData?.friends && userData.friends.some(friend => friend.id === uid);
+  const isUidInFriendList = Array.isArray(userData?.friends) && userData.friends.some((friend) => friend.id === uid);
 
+
+ 
 
   const handleOpen = (e) => {
     e.preventDefault();
