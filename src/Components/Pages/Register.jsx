@@ -56,9 +56,9 @@ const Register = () => {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        const { name, email, password } = formik.values;
+        const { name, email, password, isPage } = formik.values;
         if (formik.isValid === true) {
-            registerWithEmailAndPassword(name, email, password);
+            registerWithEmailAndPassword(name, email, password, isPage);
             setLoading(true);
         } else {
             setLoading(false);
@@ -129,8 +129,17 @@ const Register = () => {
                                         size="lg"
                                         {...formik.getFieldProps("password")}
                                     />
-
                                 </div>
+                                <div className='mt-4 mb-2'>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            {...formik.getFieldProps("isPage")}
+                                            className="mr-2"
+                                        />
+                                        Register as a Page
+                                    </label>
+                                </div>                                
                                 <div>
                                     {formik.touched.password && formik.errors.password && (
                                         <Typography variant="small" color="red">

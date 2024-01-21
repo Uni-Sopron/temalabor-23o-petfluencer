@@ -64,7 +64,7 @@ const AppContext = ({ children }) => {
     }
   };
 
-  const registerWithEmailAndPassword = async (name, email, password) => {
+  const registerWithEmailAndPassword = async (name, email, password, isPage) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
@@ -78,6 +78,7 @@ const AppContext = ({ children }) => {
         dateOfBirth: "dateOfBirth",
         habitat: "habitat",
         description: "description",
+        isPage: isPage || false,
       });
     } catch (err) {
       alert(err.message);
