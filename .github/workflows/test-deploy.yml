@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build website
-        run: cd docs && BASE_URL=${{ steps.configure-pages.outputs.base_path }} ${{ steps.detect-package-manager.outputs.manager }} run build
+        run: BASE_URL=${{ steps.configure-pages.outputs.base_path }} ${{ steps.detect-package-manager.outputs.manager }} run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
