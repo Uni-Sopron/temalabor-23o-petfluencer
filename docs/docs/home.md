@@ -43,9 +43,23 @@ Feladatvezető: Koncz Adrienn
 -Egyéb adatok
 -Elérhetőség
 
+**Munkafolyamat**
+
+-Tervezés
+-Milyen megoldások, milyen adatbázist használjunk stb.
+-A közösségi média app vázlatának megalkotása
+-Váz elkészítése
+-Adrienn észrevételeinek a javítása, megvalósítása
+-Tesztelés
+-Dokumentáció készítés
+-Bemutató készítés
+
+
 **A feladatot teljesítők**
 
 Csontos Erik
 Kende Péter
 Leyrer Balázs Valentin
 Németh Milán
+
+
