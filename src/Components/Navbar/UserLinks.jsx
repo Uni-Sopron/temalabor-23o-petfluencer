@@ -148,10 +148,20 @@ const UserLinks = () => {
                 {/* User name */}
                 <p className="m1-4 font-roboto text-sm text-black font-medium no-underline">
                     {user?.displayName === null && userData?.name !== undefined
-                        ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1)
-                        : user?.displayName?.split(" ")[0]}
+                        ? (
+                            <>
+                                {userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1)}
+                                {userData?.isPage && " (Page)"}
+                            </>
+                        )
+                        : (
+                            <>
+                                {user?.displayName?.split(" ")[0]}
+                                {userData?.isPage && " (Page)"}
+                            </>
+                        )
+                    }
                 </p>
-
                 {/* Sign Out button */}
                 <div className="ml-2 cursor-pointer text-sm text-gray-700" onClick={signOutUser}>
                     {/* Sign Out text */}

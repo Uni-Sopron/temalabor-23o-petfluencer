@@ -11,60 +11,57 @@ import { db } from "../../Config/firebase";
 import { getDocs, query, where } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
 
-const LeftSide = () => {
-  const { user, userData } = useContext(AuthContext);
-  const [kind, setKind] = useState("");
-  const [species, setSpecies] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [habitat, setHabitat] = useState("");
-  const [description, setDescription] = useState("");
 
+  const LeftSide = () => {
+    const { user, userData, attributes } = useContext(AuthContext);
+    const [formFields, setFormFields] = useState(
+      attributes.reduce((acc, attribute) => {
+        acc[attribute] = userData?.[attribute] || "";
+        return acc;
+      }, {})
+    );
+  
+    const handleInputChange = (e, attribute) => {
+      setFormFields((prevFields) => ({
+        ...prevFields,
+        [attribute]: e.target.value,
+      }));
+    };
+  
 
-  const addData = async (e) => {
-    e.preventDefault();
-
-    const collectionUsersRef = collection(db, "users");
-    const q = query(collectionUsersRef, where("uid", "==", user.uid));
-
-    try {
-      const querySnapshot = await getDocs(q);
-
-      // Check if there is a document with the specified UID
-      if (querySnapshot.size > 0) {
-        const userDocRef = querySnapshot.docs[0].ref;
-
-        // Check if all fields are not empty before updating the document
-        if (kind !== "" && species !== "" && dateOfBirth !== "" && habitat !== "" && description !== "") {
-          // Update the document with the new data
-          await updateDoc(userDocRef, {
-            kind: kind,
-            species: species,
-            dateOfBirth: dateOfBirth,
-            habitat: habitat,
-            description: description,
-            // Add other fields if needed
-          });
-
-          // Clear the form inputs
-          setKind("");
-          setSpecies("");
-          setDateOfBirth("");
-          setHabitat("");
-          setDescription("");
-
+    const addData = async (e) => {
+      e.preventDefault();
+  
+      const collectionUsersRef = collection(db, "users");
+      const q = query(collectionUsersRef, where("uid", "==", user.uid));
+  
+      try {
+        const querySnapshot = await getDocs(q);
+  
+        if (querySnapshot.size > 0) {
+          const userDocRef = querySnapshot.docs[0].ref;
+  
+          const updatedData = Object.entries(formFields).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+          }, {});
+  
+          await updateDoc(userDocRef, updatedData);
+  
+          setFormFields(attributes.reduce((acc, attribute) => {
+            acc[attribute] = "";
+            return acc;
+          }, {}));
+  
           console.log("Data updated successfully!");
         } else {
-          throw new Error("All fields must be filled");
+          console.log("User not found");
         }
-      } else {
-        // Handle the case where no document is found with the specified UID
-        console.log("User not found");
+      } catch (err) {
+        alert(err.message);
+        console.error(err.message);
       }
-    } catch (err) {
-      alert(err.message);
-      console.error(err.message);
-    }
-  };
+    };
 
 
   return (
@@ -86,65 +83,22 @@ const LeftSide = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center pt-6">
-        <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
-          {user?.displayName || userData?.displayName}
-        </p>
-      </div>
-      <div className="flex flex-col items-center pt-2">
+      {attributes.map((attribute) => (
+      <div className="flex flex-col items-center pt-2" key={attribute}>
         <input
           className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
-          name="kind"
-          value={kind}
-          onChange={(e) => setKind(e.target.value)}
-          placeholder={user?.kind || userData?.kind}
-          type="name"
-        ></input>
-      </div>
-      <div className="flex flex-col items-center pt-2">
-        <input
-          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
-          name="species"
-          value={species}
-          onChange={(e) => setSpecies(e.target.value)}
-          placeholder={user?.species || userData?.species}
-          type="name"
-        ></input>
-      </div>
-      <div className="flex flex-col items-center pt-2">
-        <input
-          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
-          name="dateOfBirth"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          placeholder={user?.dateOfBirth || userData?.dateOfBirth}
+          name={attribute}
+          value={formFields[attribute]}
+          onChange={(e) => handleInputChange(e, attribute)}
+          placeholder={userData?.[attribute]}
           type="text"
-        ></input>
+        />
       </div>
-      <div className="flex flex-col items-center pt-2">
-        <input
-          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
-          name="habitat"
-          value={habitat}
-          onChange={(e) => setHabitat(e.target.value)}
-          placeholder={user?.habitat || userData?.habitat}
-          type="name"
-        ></input>
-      </div>
-      <div className="flex flex-col items-center pt-2">
-        <input
-          className="w-full rounded-2x1 outline-none border-0 p-2 bg-gray-100"
-          name="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder={user?.description || userData?.description}
-          type="text"
-        ></input>
-      </div>
+    ))}
 
-      <button className="asd" type="submit" onClick={addData}>
-        Submit
-      </button>
+    <button className="asd" type="submit" onClick={addData}>
+      Submit
+    </button>
 
       <div className="ml-20 mt-5">
         <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none py-2">

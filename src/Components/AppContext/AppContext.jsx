@@ -66,7 +66,7 @@ const AppContext = ({ children }) => {
     }
   };
 
-  const registerWithEmailAndPassword = async (name, email, password) => {
+  const registerWithEmailAndPassword = async (name, email, password, isPage) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
@@ -85,6 +85,10 @@ const AppContext = ({ children }) => {
         dateOfBirth: "dateOfBirth",
         habitat: "habitat",
         description: "description",
+        isPage: isPage || false,
+        occupation: "occupation",
+        pageDescription: "pageDescription",
+        contact: "contact",
       });
     } catch (err) {
       alert(err.message);
@@ -146,7 +150,8 @@ const AppContext = ({ children }) => {
     userData: userData,
     selected: selected,
     setSelected: setSelected,
-  };
+    attributes: userData?.isPage ? ["name", "occupation", "pageDescription", "contact"] : ["kind", "species", "dateOfBirth", "habitat", "description"],
+  };  
 
   return (
     <div>
