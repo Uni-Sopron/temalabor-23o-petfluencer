@@ -79,6 +79,9 @@ const AppContext = ({ children }) => {
         habitat: "habitat",
         description: "description",
         isPage: isPage || false,
+        occupation: "occupation",
+        pageDescription: "pageDescription",
+        contact: "contact",
       });
     } catch (err) {
       alert(err.message);
@@ -140,7 +143,8 @@ const AppContext = ({ children }) => {
     userData: userData,
     selected: selected,
     setSelected: setSelected,
-  };
+    attributes: userData?.isPage ? ["name", "occupation", "pageDescription", "contact"] : ["kind", "species", "dateOfBirth", "habitat", "description"],
+  };  
 
   return (
     <div>
