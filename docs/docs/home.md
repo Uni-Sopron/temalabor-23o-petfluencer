@@ -7,12 +7,18 @@ sidebar_position: 2
 
 Feladatvezető: Koncz Adrienn
 
-![Petfluencer](img/asd.png)
+![](img/cat.jpg)
 
-**Feladatok részletezése I.**
+To run the project execute
 
-- Regisztráció 
-- Személyes profil 
+```bash
+npm run start
+```
+
+## Feladatok részletezése I
+
+- Regisztráció
+- Személyes profil
 - Page profil
 - Bejelentkezés
 - Új jelszó igényzés
@@ -21,7 +27,7 @@ Feladatvezető: Koncz Adrienn
 - Kommentelés
 - Egymás ismerősnek jelölése vagy követése
 
-**Feladatok részletezése II.**
+## Feladatok részletezése II
 
 - Design-os frontend
 - Kereső (profilok között)
@@ -34,7 +40,7 @@ Feladatvezető: Koncz Adrienn
 - Lakóhely
 - Profilkép
 
-**Feladatok részletezése III.**
+## Feladatok részletezése III
 
 - Születési dátum
 - Leírás
@@ -45,7 +51,7 @@ Feladatvezető: Koncz Adrienn
 - Egyéb adatok
 - Elérhetőség
 
-**Munkafolyamat**
+## Munkafolyamat
 
 - Tervezés
 - Milyen megoldások, milyen adatbázist használjunk stb.
@@ -56,15 +62,11 @@ Feladatvezető: Koncz Adrienn
 - Dokumentáció készítés
 - Bemutató készítés
 
+## A feladatot teljesítők
 
-**A feladatot teljesítők**
-
-Csontos Erik
-
-Kende Péter
-
-Leyrer Balázs Valentin
-
-Németh Milán
-
-
+| Név                    | munka % |
+| :--------------------- | ------: |
+| Csontos Erik           |      sc |
+| Kende Péter            |      sc |
+| Leyrer Balázs Valentin |      sc |
+| Németh Milán           |      sc |
