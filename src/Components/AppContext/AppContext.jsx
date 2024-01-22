@@ -127,7 +127,7 @@ const AppContext = ({ children }) => {
       if (user) {
         const q = query(collectionUsersRef, where("uid", "==", user.uid));
         await onSnapshot(q, (doc) => {
-          setUserData(doc.docs[0].data());
+          setUserData(doc?.docs[0]?.data());
         });
         setUser(user);
       } else {

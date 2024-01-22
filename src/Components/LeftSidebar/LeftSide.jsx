@@ -3,8 +3,6 @@ import { Tooltip } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
 import animal from "../../assets/animal.jpg";
 import avatar from "../../assets/avatar.png";
-import facebook from "../../assets/facebook.png";
-import twitter from "../../assets/twitter.png";
 import { AuthContext } from "../AppContext/AppContext";
 import { collection } from "firebase/firestore";
 import { db } from "../../Config/firebase";
@@ -93,8 +91,10 @@ const LeftSide = () => {
             value={formFields[attribute]}
             onChange={(e) => handleInputChange(e, attribute)}
             placeholder={userData?.[attribute]}
-            type="text"
+            type={attribute === "dateOfBirth" ? "date" : "text"}
+
           />
+          {console.log(userData?.[attribute])}
         </div>
       ))}
       <div className="flex flex-col items-center pt-4">

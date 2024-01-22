@@ -19,7 +19,7 @@ const FriendProfile = () => {
     const getUserProfile = async () => {
       const q = query(collection(db, "users"), where("uid", "==", id));
       onSnapshot(q, (doc) => {
-        setProfile(doc.docs[0].data());
+        setProfile(doc?.docs[0]?.data());
       });
     };
     getUserProfile();
