@@ -163,7 +163,7 @@ const NavLinks = () => {
                   className="flex items-center justify-between hover:bg-gray-100 duration-300 ease-in-out"
                   key={user.id}
                 >
-                  <Link to={`/profile/${user.id}`}>
+                  <Link to={`/profile/${user.uid}`}>
                     <div className="flex items-center my-2 cursor-pointer">
                       <div className="flex items-center">
                         <Avatar
