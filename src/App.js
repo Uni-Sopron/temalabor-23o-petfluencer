@@ -1,7 +1,18 @@
 import "./App.css";
+import Pages from "./Components/Pages/Pages";
+import { BrowserRouter } from "react-router-dom";
+import AppContext from "./Components/AppContext/AppContext";
 
-function App(){
-return <h1 className="text-3xl font-bold underline"> Hello world!</h1>;
+function App() {
+    return (
+        <div className="App">
+            <BrowserRouter>
+                <AppContext>
+                    <Pages />
+                </AppContext>
+            </BrowserRouter>
+        </div>
+    );
 }
 
 export default App;
