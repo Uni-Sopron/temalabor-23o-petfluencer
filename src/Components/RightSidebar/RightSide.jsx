@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react";
 import waterslide from "../../assets/waterslide.jpg";
 import { AuthContext } from "../AppContext/AppContext";
 import { Link } from "react-router-dom";
-import { Avatar } from "@material-tailwind/react";
-import avatar from "../../assets/avatar.png";
 import remove from "../../assets/delete.png";
 import {
   collection,
@@ -34,7 +32,7 @@ const RightSide = () => {
     const userDocumentId = getDoc.docs[0].id;
 
     await updateDoc(doc(db, "users", userDocumentId), {
-      friends: arrayRemove({ id: id, name: name, image: image }),
+      friends: arrayRemove({ id: id, name: name }),
     });
   };
 
@@ -48,6 +46,8 @@ const RightSide = () => {
       setStartIndex((prevIndex) => Math.min(friendList?.length - maxVisibleFriends, prevIndex + step));
     }
   };
+
+  
 
 
   return (
@@ -84,12 +84,6 @@ const RightSide = () => {
                 <Link to={`/profile/${friend.id}`}>
                   <div className="flex items-center my-2 cursor-pointer">
                     <div className="flex items-center">
-                      <Avatar
-                        size="sm"
-                        variant="circular"
-                        src={friend?.image || avatar}
-                        alt="avatar"
-                      ></Avatar>
                       <p className="ml-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
                         {friend.name}
                       </p>

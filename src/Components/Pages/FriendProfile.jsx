@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import LeftSide from "../LeftSidebar/LeftSide";
 import RightSide from "../RightSidebar/RightSide";
 import Navbar from "../Navbar/Navbar";
@@ -8,10 +8,12 @@ import profilePic from "./../../assets/animal.jpg";
 import { Avatar } from "@material-tailwind/react";
 import avatar from "./../../assets/avatar.png";
 import { useParams } from "react-router-dom";
+import { AuthContext } from '../AppContext/AppContext';
 
 const FriendProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
+  const { user, userData } = useContext(AuthContext);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -45,7 +47,7 @@ const FriendProfile = () => {
               <div className="absolute bottom-10 left-6">
                 <Avatar
                   size="sm"
-                  src={profile?.image || avatar}
+                  src={user?.photoURL || avatar}
                   alt="avatar"
                   variant="circular"
                 ></Avatar>

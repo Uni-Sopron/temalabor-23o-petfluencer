@@ -23,10 +23,12 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../../Config/firebase";
+import { db, storage } from "../../Config/firebase";
 import CommentSection from "./CommentSection";
+import { ref, getDownloadURL } from "firebase/storage";
 
-const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
+const PostCard = ({ uid, id, name, email, text, image, timestamp }) => {
+  const [logo, setLogo] = useState();
   const { user, userData } = useContext(AuthContext);
   const [state, dispatch] = useReducer(PostReducer, postsStates);
   const likesRef = doc(collection(db, "posts", id, "likes"));
@@ -34,10 +36,24 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
   const [open, setOpen] = useState(false);
   const singlePostDocument = doc(db, "posts", id);
-  const isUidInFriendList = Array.isArray(userData?.friends) && userData.friends.some((friend) => friend.id === uid);
+  const isUidInFriendList =
+    Array.isArray(userData?.friends) &&
+    userData.friends.some((friend) => friend.id === uid);
 
-
- 
+  useEffect(() => {
+    //get user profile picture from firebase storage
+    const getUserProfile = async () => {
+      try {
+        const storageRef = ref(storage, `profilePictures/${uid}`);
+        const downloadURL = await getDownloadURL(storageRef);
+        if (downloadURL) {
+          setLogo(downloadURL);
+        }
+      } catch (err) {
+      }
+    };
+    getUserProfile();
+  }, []);
 
   const handleOpen = (e) => {
     e.preventDefault();
@@ -52,7 +68,6 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
       await updateDoc(data, {
         friends: arrayUnion({
           id: uid,
-          image: logo,
           name: name,
         }),
       });
@@ -181,7 +196,7 @@ const PostCard = ({ uid, id, logo, name, email, text, image, timestamp }) => {
               Published: {timestamp}
             </p>
           </div>
-          {(user?.uid !== uid && isUidInFriendList === false) && (
+          {user?.uid !== uid && isUidInFriendList === false && (
             <div
               onClick={addUser}
               className="w-full flex justify-end cursor-pointer mr-10"

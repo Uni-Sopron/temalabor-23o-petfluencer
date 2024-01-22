@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-    updateProfile,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db, onAuthStateChanged } from "../../Config/firebase";
 import {
@@ -14,11 +14,11 @@ import {
   where,
   collection,
   getDocs,
-  addDoc,
+  setDoc,
   onSnapshot,
+  doc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
 
 export const AuthContext = createContext();
 
@@ -38,7 +38,7 @@ const AppContext = ({ children }) => {
       const q = query(collectionUsersRef, where("uid", "==", user.uid));
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
-        await addDoc(collectionUsersRef, {
+        await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
           name: user.displayName,
           email: user.email,
@@ -66,15 +66,21 @@ const AppContext = ({ children }) => {
     }
   };
 
-  const registerWithEmailAndPassword = async (name, email, password, isPage) => {
+  const registerWithEmailAndPassword = async (
+    name,
+    email,
+    password,
+    isPage
+  ) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
       await updateProfile(user, {
         displayName: name,
-        photoURL: "https://firebasestorage.googleapis.com/v0/b/petfluencer-59b74.appspot.com/o/DONOTDELETE.png?alt=media&token=761dee90-5bb4-4b48-9723-162faf44147c",
+        photoURL:
+          "https://firebasestorage.googleapis.com/v0/b/petfluencer-59b74.appspot.com/o/DONOTDELETE.png?alt=media&token=761dee90-5bb4-4b48-9723-162faf44147c",
       });
-      await addDoc(collectionUsersRef, {
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name,
         image: user.photoURL,
@@ -89,6 +95,7 @@ const AppContext = ({ children }) => {
         occupation: "occupation",
         pageDescription: "pageDescription",
         contact: "contact",
+        others: "others",
       });
     } catch (err) {
       alert(err.message);
@@ -150,8 +157,10 @@ const AppContext = ({ children }) => {
     userData: userData,
     selected: selected,
     setSelected: setSelected,
-    attributes: userData?.isPage ? ["name", "occupation", "pageDescription", "contact"] : ["kind", "species", "dateOfBirth", "habitat", "description"],
-  };  
+    attributes: userData?.isPage
+      ? ["name", "occupation", "pageDescription", "contact", "others"]
+      : ["kind", "species", "dateOfBirth", "habitat", "description"],
+  };
 
   return (
     <div>

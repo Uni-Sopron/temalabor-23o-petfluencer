@@ -25,4 +25,4 @@ const uploadProfilePicture = async (userId, file) => {
   return downloadURL;
 };
 
-export { auth, db, onAuthStateChanged, uploadProfilePicture, getFirestore };
+export { storage, auth, db, onAuthStateChanged, uploadProfilePicture, getFirestore };
