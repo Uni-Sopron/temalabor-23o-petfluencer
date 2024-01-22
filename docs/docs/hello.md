@@ -1,6 +1,6 @@
 ---
-sidebar_label: 'Hbbhbhi!'
-sidebar_position: 3
+sidebar_label: 'Témalabor 2023/24/1 Petfluencer Webapplikáció!'
+sidebar_position: 1
 ---
 
 # Hello
