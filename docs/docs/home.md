@@ -1,21 +1,14 @@
 ---
-sidebar_label: 'Feladatunk'
+sidebar_label: "Feladatunk"
 sidebar_position: 2
 ---
 
 # Petfluencer social media webapplikáció megvalósítása egy választott fullstack megoldással
 
-Feladatvezető: Koncz Adrienn
+Feladatvezető: `Koncz Adrienn`
 
-![](img/cat.jpg)
 
-To run the project execute
-
-```bash
-npm run start
-```
-
-## Feladatok részletezése I
+## Feladatok részletezése
 
 - Regisztráció
 - Személyes profil
@@ -27,8 +20,6 @@ npm run start
 - Kommentelés
 - Egymás ismerősnek jelölése vagy követése
 
-## Feladatok részletezése II
-
 - Design-os frontend
 - Kereső (profilok között)
 - Hastag-elés lehetősége
@@ -39,8 +30,6 @@ npm run start
 - Fajta
 - Lakóhely
 - Profilkép
-
-## Feladatok részletezése III
 
 - Születési dátum
 - Leírás
@@ -64,9 +53,9 @@ npm run start
 
 ## A feladatot teljesítők
 
-| Név                    | munka % |
-| :--------------------- | ------: |
-| Csontos Erik           |      sc |
-| Kende Péter            |      sc |
-| Leyrer Balázs Valentin |      sc |
-| Németh Milán           |      sc |
+| Név                    |
+| :--------------------- |
+| Csontos Erik           |
+| Kende Péter            |
+| Leyrer Balázs Valentin |
+| Németh Milán           |    

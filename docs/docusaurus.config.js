@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Önlab beszámoló',
+  title: 'Témalabor beszámoló',
   tagline: 'Dokumentálni jó',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: `${process.env.BASE_URL ?? ''}/`,
@@ -50,7 +50,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Önlab beszámoló template',
+        title: 'Témalabor beszámoló',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
