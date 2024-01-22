@@ -19,6 +19,8 @@ const handleImageUpload = () => {
     }
 };
 
+
+
 const Main = () => {
     const { user, userData } = useContext(AuthContext);
     const text = useRef("");
@@ -34,6 +36,7 @@ const Main = () => {
     const handleUpload = (e) => {
         setFile(e.target.files[0]);
     };
+    console.log(user);
     
     const handleSubmitPost = async (e) => {
         e.preventDefault();

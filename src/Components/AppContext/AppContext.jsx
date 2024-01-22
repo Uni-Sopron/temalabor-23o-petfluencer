@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+    updateProfile,
 } from "firebase/auth";
 import { auth, db, onAuthStateChanged } from "../../Config/firebase";
 import {
@@ -17,6 +18,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+
 
 export const AuthContext = createContext();
 
@@ -68,9 +70,14 @@ const AppContext = ({ children }) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
+      await updateProfile(user, {
+        displayName: name,
+        photoURL: "https://firebasestorage.googleapis.com/v0/b/petfluencer-59b74.appspot.com/o/DONOTDELETE.png?alt=media&token=761dee90-5bb4-4b48-9723-162faf44147c",
+      });
       await addDoc(collectionUsersRef, {
         uid: user.uid,
         name,
+        image: user.photoURL,
         providerId: "email/password",
         email: user.email,
         kind: "kind",

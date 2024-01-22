@@ -50,9 +50,9 @@ const UserLinks = () => {
             const currentUser = auth.currentUser;
       
             
-            const downloadURL = await uploadProfilePicture(user, file);
+            const downloadURL = await uploadProfilePicture(user.uid, file);
             // Upload the file to Firebase Storage
-            updateProfile(user, {
+            updateProfile(currentUser, {
                 photoURL: downloadURL
                 
               }).then(() => {
@@ -144,7 +144,7 @@ const UserLinks = () => {
                     style={{ display: 'none' }}
                     onChange={handleFileChange}
                 />
-                <Avatar src={user?.photoURL} size="sm" alt="avatar" onClick={handleAvatarClick}></Avatar>
+                <Avatar src={user?.photoURL || avatar} size="sm" alt="avatar" onClick={handleAvatarClick}></Avatar>
                 {/* User name */}
                 <p className="m1-4 font-roboto text-sm text-black font-medium no-underline">
                     {user?.displayName === null && userData?.name !== undefined
