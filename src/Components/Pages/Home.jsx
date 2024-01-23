@@ -8,19 +8,17 @@ import Main from '../Main/Main';
 const Home = () => {
   return (
     <div className="w-full">
-      <div className="fixed top-0 z-10 w-full bg-white">
+      <div className="sticky z-10 w-full bg-white">
         <Navbar></Navbar>
       </div>
-      <div className="flex bg-gray-100">
-        <div className="flex-auto w-[20%] fixed top-12">
+      <div className="grid bg-gray-100 md:grid-cols-4 grid-cols-1">
+        <div className="">
           <LeftSide></LeftSide>
         </div>
-        <div className="flex-auto w-[60%] absolute left-[20%] top-14 bg-gray-100 rounded-x]">
-          <div className="w-[80%] mx-auto">
+        <div className="flex col-span-2 justify-center">
             <Main></Main>
-          </div>
         </div>
-        <div className="flex-auto w-[20%] fixed right-0 top-12">
+        <div className="">
           <RightSide></RightSide>
         </div>
       </div>
